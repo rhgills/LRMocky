@@ -108,7 +108,10 @@
   for (id<LRExpectation> expectation in expectations) {
     if ([expectation respondsToSelector:@selector(matches:)] && [(LRInvocationExpectation *)expectation matches:invocation]) {
       if ([expectation respondsToSelector:@selector(calledWithInvalidState)] && expectation.calledWithInvalidState == YES) {
-        return;
+          LRUnexpectedInvocation *unexpectedInvocation = [LRUnexpectedInvocation unexpectedInvocation:invocation];
+          unexpectedInvocation.mockObject = mockObject;
+          [expectations addObject:unexpectedInvocation];
+          return;
       }
       return [(LRInvocationExpectation *)expectation invoke:invocation];
     }

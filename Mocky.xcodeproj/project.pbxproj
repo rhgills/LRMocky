@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B239275170CFC4500F33AB7 /* HCBlockMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A36F415314296449004EAA45 /* HCBlockMatcher.m */; };
 		A301767E11FDEC22004828C5 /* LRMocky.h in Headers */ = {isa = PBXBuildFile; fileRef = A301767511FDEB9C004828C5 /* LRMocky.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A301769E11FDEEFC004828C5 /* LRExpectationBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A301768A11FDEEFC004828C5 /* LRExpectationBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A301769F11FDEEFC004828C5 /* LRExpectationBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A301768B11FDEEFC004828C5 /* LRExpectationBuilder.m */; };
@@ -988,6 +989,7 @@
 				A381A25312243FAC00FA2A5C /* ProtocolMockTests.m in Sources */,
 				A381A2611224410A00FA2A5C /* ImposterizerTest.m in Sources */,
 				A3289A56122C746500D89A88 /* NotificationExpectationTests.m in Sources */,
+				4B239275170CFC4500F33AB7 /* HCBlockMatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
