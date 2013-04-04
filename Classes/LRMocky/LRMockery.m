@@ -137,14 +137,21 @@ NSString *failureFor(id<LRDescribable> expectation) {
 
 - (void)assertSatisfiedInFile:(NSString *)fileName lineNumber:(int)lineNumber;
 {
-  for (id<LRExpectation> expectation in expectations) {
-    if ([expectation isSatisfied] == NO) {
-      [testNotifier notifiesFailureWithDescription:failureFor(expectation) inFile:fileName lineNumber:lineNumber];
+    id <LRExpectation> firstFailedExpectation = nil;
+    for (id<LRExpectation> expectation in expectations) {
+        if ([expectation isSatisfied] == NO) {
+            NSLog(@"Failure: %@"
+                  "In file: %@"
+                  "At line: %@", failureFor(expectation), fileName, @(lineNumber));
+            if (!firstFailedExpectation) firstFailedExpectation = expectation;
+        }
     }
-  }
-  if (self.automaticallyResetWhenAsserting) {
-    [self reset];
-  }
+    
+    if (firstFailedExpectation) [testNotifier notifiesFailureWithDescription:failureFor(firstFailedExpectation) inFile:fileName lineNumber:lineNumber];
+    
+    if (self.automaticallyResetWhenAsserting) {
+        [self reset];
+    }
 }
 
 - (void)addExpectation:(id<LRExpectation>)expectation;
