@@ -60,9 +60,8 @@
   NSMutableArray *arguments = [NSMutableArray array];
   for (int i = 2; i < [[invocation methodSignature] numberOfArguments]; i++) {
     id argument = [invocation getArgumentAtIndexAsObject:i];
-      if (argument) {
-        [arguments addObject:argument];
-      }
+    if (!argument) argument = [NSNull null];
+    [arguments addObject:argument];
   }
   [message append:[NSString stringWithFormat:@"Unexpected method %@ called on %@ with arguments: %@", 
       NSStringFromSelector([invocation selector]), mockObject, arguments]];
