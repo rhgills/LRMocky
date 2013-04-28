@@ -140,8 +140,8 @@ NSString *failureFor(id<LRDescribable> expectation) {
     id <LRExpectation> firstFailedExpectation = nil;
     for (id<LRExpectation> expectation in expectations) {
         if ([expectation isSatisfied] == NO) {
-            NSLog(@"Failure: %@"
-                  "In file: %@"
+            NSLog(@"Failure: %@\n"
+                  "In file: %@\n"
                   "At line: %@", failureFor(expectation), fileName, @(lineNumber));
             if (!firstFailedExpectation) firstFailedExpectation = expectation;
         }
