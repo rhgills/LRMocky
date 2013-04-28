@@ -36,7 +36,7 @@
 - (BOOL)matchesParameters:(NSInvocation *)invocation;
 {
     NSMethodSignature *methodSignature = [expectedInvocation methodSignature];
-
+    
     for (int i = 2; i < [methodSignature numberOfArguments]; i++) {
         id expected = [expectedInvocation getArgumentAtIndexAsObject:i];
         id received = [invocation getArgumentAtIndexAsObject:i];
@@ -45,8 +45,10 @@
         if ([expected conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
             expectedMatchesReceived = [expected matches:received];
         }
-        else {
+        else if (expected != nil) {
             expectedMatchesReceived = [expected isEqual:received];
+        }else{ // expected == nil
+            expectedMatchesReceived = (received == nil);
         }
         
         if (!expectedMatchesReceived) {
