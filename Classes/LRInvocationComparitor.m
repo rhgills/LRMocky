@@ -36,7 +36,7 @@
 - (BOOL)matchesParameters:(NSInvocation *)invocation;
 {
     NSMethodSignature *methodSignature = [expectedInvocation methodSignature];
-    
+
     for (int i = 2; i < [methodSignature numberOfArguments]; i++) {
         id expected = [expectedInvocation getArgumentAtIndexAsObject:i];
         id received = [invocation getArgumentAtIndexAsObject:i];
