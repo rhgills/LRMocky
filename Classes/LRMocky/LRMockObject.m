@@ -105,6 +105,7 @@
 
 - (void)dispatchInvocation:(NSInvocation *)invocation forMock:(LRMockObject *)mockObject;
 {
+    BOOL expectationWasExpected = NO;
   for (id<LRExpectation> expectation in expectations) {
     if ([expectation respondsToSelector:@selector(matches:)] && [(LRInvocationExpectation *)expectation matches:invocation]) {
       if ([expectation respondsToSelector:@selector(calledWithInvalidState)] && expectation.calledWithInvalidState == YES) {
@@ -113,12 +114,16 @@
           [expectations addObject:unexpectedInvocation];
           return;
       }
-      return [(LRInvocationExpectation *)expectation invoke:invocation];
+        [(LRInvocationExpectation *)expectation invoke:invocation];
+        expectationWasExpected = YES;
     }
   }
-  LRUnexpectedInvocation *unexpectedInvocation = [LRUnexpectedInvocation unexpectedInvocation:invocation];
-  unexpectedInvocation.mockObject = mockObject;
-  [expectations addObject:unexpectedInvocation];
+    
+    if (!expectationWasExpected) {
+      LRUnexpectedInvocation *unexpectedInvocation = [LRUnexpectedInvocation unexpectedInvocation:invocation];
+      unexpectedInvocation.mockObject = mockObject;
+      [expectations addObject:unexpectedInvocation];
+    }
 }
 
 @end

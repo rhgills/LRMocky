@@ -168,31 +168,33 @@ NSString *failureFor(id<LRDescribable> expectation) {
 
 - (void)addExpectation:(id<LRExpectation>)theExpectation;
 {
-    id <LRExpectation> expectationToAdd = theExpectation;
+    [expectations addObject:theExpectation];
     
-    if ([theExpectation isKindOfClass:[LRInvocationExpectation class]]) {
-        // if the invocation expectation conflicts with an existing expectation, the most restrictive one wins.
-        // an expectation conflicts if: it has the same target and selector.
-        // degree of restrictivity is defined only by cardinality of the expectation
-        LRInvocationExpectation *theInvocationExpectation = (LRInvocationExpectation *)theExpectation;
-        
-        for (id <LRExpectation> anExpectation in expectations) {
-            if (![anExpectation isKindOfClass:[LRInvocationExpectation class]]) {
-                continue;
-            }
-            
-            LRInvocationExpectation *anInvocationExpectation = (LRInvocationExpectation *)anExpectation;
-            if (sel_isEqual(anInvocationExpectation.invocation.selector, theInvocationExpectation.invocation.selector) && anInvocationExpectation.mockObject == theInvocationExpectation.mockObject) {
-                // prefer older expectations - ties are won by the receiver of mostRestrictiveInvocationExpectation:
-                LRInvocationExpectation *mostRestrictiveInvocationExpectation = [anInvocationExpectation mostRestrictiveInvocationExpectation:theInvocationExpectation];
-                expectationToAdd = mostRestrictiveInvocationExpectation;
-            }
-         }
-    }
-    
-    if (![expectations containsObject:expectationToAdd]) {
-      [expectations addObject:expectationToAdd];
-    }
+//    id <LRExpectation> expectationToAdd = theExpectation;
+//    
+//    if ([theExpectation isKindOfClass:[LRInvocationExpectation class]]) {
+//        // if the invocation expectation conflicts with an existing expectation, the most restrictive one wins.
+//        // an expectation conflicts if: it has the same target and selector.
+//        // degree of restrictivity is defined only by cardinality of the expectation
+//        LRInvocationExpectation *theInvocationExpectation = (LRInvocationExpectation *)theExpectation;
+//        
+//        for (id <LRExpectation> anExpectation in expectations) {
+//            if (![anExpectation isKindOfClass:[LRInvocationExpectation class]]) {
+//                continue;
+//            }
+//            
+//            LRInvocationExpectation *anInvocationExpectation = (LRInvocationExpectation *)anExpectation;
+//            if (sel_isEqual(anInvocationExpectation.invocation.selector, theInvocationExpectation.invocation.selector) && anInvocationExpectation.mockObject == theInvocationExpectation.mockObject) {
+//                // prefer older expectations - ties are won by the receiver of mostRestrictiveInvocationExpectation:
+//                LRInvocationExpectation *mostRestrictiveInvocationExpectation = [anInvocationExpectation mostRestrictiveInvocationExpectation:theInvocationExpectation];
+//                expectationToAdd = mostRestrictiveInvocationExpectation;
+//            }
+//         }
+//    }
+//    
+//    if (![expectations containsObject:expectationToAdd]) {
+//      [expectations addObject:expectationToAdd];
+//    }
 }
 
 - (void)reset;
