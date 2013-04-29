@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "LRExpectation.h"
 #import "LRTestCase.h"
+#import "LRExpectationCardinality.h"
 
 @class LRExpectationBuilder;
 @class SenTestCase;
@@ -140,6 +141,8 @@
  @param sender The object you expect to post the notification.
  */
 - (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender;
+
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender cardinality:(id <LRExpectationCardinality>)cardinality;
 
 ///------------------------------------------------------------------------------------/
 /// @name Creating state machines

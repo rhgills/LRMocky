@@ -8,13 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "LRExpectation.h"
+#import "LRExpectationCardinality.h"
 
 @interface LRNotificationExpectation : NSObject <LRExpectation> {
   NSString *name;
   id sender;
-  BOOL isSatisfied;
 }
 + (id)expectationWithNotificationName:(NSString *)name;
 + (id)expectationWithNotificationName:(NSString *)name sender:(id)sender;
-- (id)initWithName:(NSString *)name sender:(id)sender;
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender cardinality:(id <LRExpectationCardinality>)cardinality;
+- (id)initWithName:(NSString *)name sender:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality;
+
+@property (nonatomic, retain) id<LRExpectationCardinality> cardinality;
+
 @end

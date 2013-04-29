@@ -11,25 +11,34 @@
 #import "LRHamcrestSupport.h"
 
 
-@implementation LRNotificationExpectation
+@implementation LRNotificationExpectation {
+    NSUInteger numberOfInvocations;
+}
 
 + (id)expectationWithNotificationName:(NSString *)name;
 {
-  return [[[self alloc] initWithName:name sender:nil] autorelease];
+    return [[[self alloc] initWithName:name sender:nil cardinality: nil] autorelease];
 }
 
 + (id)expectationWithNotificationName:(NSString *)name sender:(id)sender;
 {
-  return [[[self alloc] initWithName:name sender:sender] autorelease];
+    return [[[self alloc] initWithName:name sender:sender cardinality:nil] autorelease];
 }
 
-- (id)initWithName:(NSString *)notificationName sender:(id)object;
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality
+{
+    return [[[self alloc] initWithName:name sender:sender cardinality:cardinality] autorelease];
+}
+
+- (id)initWithName:(NSString *)notificationName sender:(id)object cardinality:(id<LRExpectationCardinality>)cardinality;
 {
   if (self = [super init]) {
-    isSatisfied = NO;
+      numberOfInvocations = 0;
     name = [notificationName copy];
     sender = [object retain];
-    
+    if (!cardinality) cardinality = LRM_exactly(1);
+    self.cardinality = cardinality;
+      
     id notificationObject = sender;
     
     if ([sender conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
@@ -47,12 +56,17 @@
 
 - (void)receiveNotification:(NSNotification *)note
 {
+    BOOL matches;
   if ([sender conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
-    isSatisfied = [sender matches:note.object];
+        matches = [sender matches:note.object];
   }
   else {
-    isSatisfied = YES;
+      matches = YES;
   }
+    
+    if (matches) {
+        numberOfInvocations++;
+    }
 }
 
 - (void)dealloc
@@ -68,7 +82,7 @@
 
 - (BOOL)isSatisfied
 {
-  return isSatisfied;
+    return [self.cardinality satisfiedBy:numberOfInvocations];
 }
 
 - (void)describeTo:(LRExpectationMessage *)message

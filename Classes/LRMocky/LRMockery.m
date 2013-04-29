@@ -119,6 +119,11 @@
   [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender]];
 }
 
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality
+{
+    [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender cardinality:cardinality]];
+}
+
 - (LRMockyStateMachine *)states:(NSString *)name;
 {
   return [[[LRMockyStateMachine alloc] initWithName:name] autorelease];
