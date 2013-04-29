@@ -129,5 +129,14 @@ NSString *const LRMockyExpectationError = @"LRMockyExpectationError";
   [actions addObject:anAction];
 }
 
+- (void)setInvocation:(NSInvocation *)invocation
+{
+    [invocation retain];
+    [expectedInvocation release];
+    expectedInvocation = invocation;
+    
+    [expectedInvocation retainArguments];
+}
+
 @end
 
