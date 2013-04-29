@@ -11,6 +11,8 @@
 
 @protocol LRExpectationCardinality <NSObject, LRDescribable>
 - (BOOL)satisfiedBy:(int)numberOfInvocations;
+
+@property (readonly) NSUInteger permissivity; // a number from 0 to NSUIntegerMAX representing the number of possible positive integer values that satisfy this cardinality
 @end
 
 @interface LREqualToCardinality : NSObject <LRExpectationCardinality> {

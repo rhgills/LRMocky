@@ -15,7 +15,6 @@
 @class LRMockyStateMachine;
 @class LRMockObject;
 
-
 /** Represents a context in which mocks are created and verified.
  
  */

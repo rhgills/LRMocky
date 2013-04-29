@@ -14,8 +14,20 @@
 #import "LRNotificationExpectation.h"
 #import "LRMockyStates.h"
 #import "LRExpectationMessage.h"
+#import <objc/runtime.h>
+#import "LRExpectationCardinality.h"
 
 #define addMock(mock) [self addAndReturnMock:mock];
+
+
+
+@interface LRInvocationExpectation (LRMockeryAdditions)
+
+- (LRInvocationExpectation *)mostRestrictiveInvocationExpectation:(LRInvocationExpectation *)anInvocationExpectation;
+
+@end
+
+
 
 @interface LRMockery ()
 - (void)assertSatisfiedInFile:(NSString *)fileName lineNumber:(int)lineNumber;
@@ -154,9 +166,33 @@ NSString *failureFor(id<LRDescribable> expectation) {
     }
 }
 
-- (void)addExpectation:(id<LRExpectation>)expectation;
+- (void)addExpectation:(id<LRExpectation>)theExpectation;
 {
-  [expectations addObject:expectation];
+    id <LRExpectation> expectationToAdd = theExpectation;
+    
+    if ([theExpectation isKindOfClass:[LRInvocationExpectation class]]) {
+        // if the invocation expectation conflicts with an existing expectation, the most restrictive one wins.
+        // an expectation conflicts if: it has the same target and selector.
+        // degree of restrictivity is defined only by cardinality of the expectation
+        LRInvocationExpectation *theInvocationExpectation = (LRInvocationExpectation *)theExpectation;
+        
+        for (id <LRExpectation> anExpectation in expectations) {
+            if (![anExpectation isKindOfClass:[LRInvocationExpectation class]]) {
+                continue;
+            }
+            
+            LRInvocationExpectation *anInvocationExpectation = (LRInvocationExpectation *)anExpectation;
+            if (sel_isEqual(anInvocationExpectation.invocation.selector, theInvocationExpectation.invocation.selector) && anInvocationExpectation.mockObject == theInvocationExpectation.mockObject) {
+                // prefer older expectations - ties are won by the receiver of mostRestrictiveInvocationExpectation:
+                LRInvocationExpectation *mostRestrictiveInvocationExpectation = [anInvocationExpectation mostRestrictiveInvocationExpectation:theInvocationExpectation];
+                expectationToAdd = mostRestrictiveInvocationExpectation;
+            }
+         }
+    }
+    
+    if (![expectations containsObject:expectationToAdd]) {
+      [expectations addObject:expectationToAdd];
+    }
 }
 
 - (void)reset;
@@ -174,3 +210,22 @@ void LRM_assertContextSatisfied(LRMockery *context, NSString *fileName, int line
   [context assertSatisfiedInFile:fileName lineNumber:lineNumber];
 }
 
+
+
+
+@implementation LRInvocationExpectation (LRMockeryAdditions)
+
+// ties won by the receiver
+- (LRInvocationExpectation *)mostRestrictiveInvocationExpectation:(LRInvocationExpectation *)anInvocationExpectation
+{
+    id <LRExpectationCardinality> ourCardinality = self.cardinality;
+    id <LRExpectationCardinality> aCardinality = anInvocationExpectation.cardinality;
+    
+    if (ourCardinality.permissivity <= aCardinality.permissivity) {
+        return self;
+    }else{ // aCardinality.permissivity < ourCardinality.permissivity
+        return anInvocationExpectation;
+    }
+}
+
+@end

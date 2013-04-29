@@ -11,10 +11,13 @@
 
 @implementation LREqualToCardinality
 
+@synthesize permissivity = _permissivity;
+
 - (id)initWithInt:(int)anInt;
 {
   if (self = [super init]) {
     equalToInt = anInt;
+      _permissivity = 1;
   }
   return self;
 }
@@ -43,10 +46,14 @@ id<LRExpectationCardinality> LRM_exactly(int anInt)
 
 @implementation LRAtLeastCardinality
 
+@synthesize permissivity = _permissivity;
+
+
 - (id)initWithMinimum:(int)theMinimum;
 {
   if (self = [super init]) {
     minimum = theMinimum;
+      _permissivity = (NSIntegerMax - minimum);
   }
   return self;
 }
@@ -75,10 +82,14 @@ id<LRExpectationCardinality> LRM_atLeast(int anInt)
 
 @implementation LRAtMostCardinality
 
+@synthesize permissivity = _permissivity;
+
+
 - (id)initWithMaximum:(int)theMaximum;
 {
   if (self = [super init]) {
     maximum = theMaximum;
+      _permissivity = (maximum - 0) + 1;
   }
   return self;
 }
@@ -107,11 +118,15 @@ id<LRExpectationCardinality> LRM_atMost(int anInt)
 
 @implementation LRBetweenCardinality
 
+@synthesize permissivity = _permissivity;
+
+
 - (id)initWithMinimum:(int)theMinimum andMaximum:(int)theMaximum;
 {
   if (self = [super init]) {
     minimum = theMinimum;
     maximum = theMaximum;
+      _permissivity = (maximum - minimum) + 1;
   }
   return self;
 }
