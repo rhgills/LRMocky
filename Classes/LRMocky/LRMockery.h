@@ -181,7 +181,7 @@
  @param expectationBlock An expectation block containing expectation calls.
  @see LRExpectationBuilder
  */
-- (void)checking:(void (^)(LRExpectationBuilder *))expectationBlock;
+- (void)checking:(void (^)(LRExpectationBuilder *builder))expectationBlock;
 
 
 /** Add's a new expectation to the current context.
