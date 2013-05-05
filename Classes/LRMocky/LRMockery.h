@@ -130,19 +130,12 @@
  NSNotificationCenter. If it is not, the expectation will fail.
  
  @param name The name of the notification you expect to be posted.
+ @param fromObject The object you expect to post the notification, a Hamcrest matcher, or nil, for any sender.
+ @param userInfo The userInfo object you expect.
  */
-- (void)expectNotificationNamed:(NSString *)name;
 
-/** Sets an expectation that a NSNotification will be posted from a specific object.
- 
- As above, although only notifications posted by the specified sender will be observed.
- 
- @param name The name of the notification you expect to be posted.
- @param sender The object you expect to post the notification.
- */
-- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender;
-
-- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender cardinality:(id <LRExpectationCardinality>)cardinality;
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender userInfo:(NSDictionary *)userInfo;
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender userInfo:(NSDictionary *)userInfo cardinality:(id <LRExpectationCardinality>)cardinality;
 
 ///------------------------------------------------------------------------------------/
 /// @name Creating state machines

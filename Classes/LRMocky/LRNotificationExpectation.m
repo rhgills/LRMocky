@@ -15,56 +15,63 @@
     NSUInteger numberOfInvocations;
 }
 
-+ (id)expectationWithNotificationName:(NSString *)name;
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo
 {
-    return [[[self alloc] initWithName:name sender:nil cardinality: nil] autorelease];
+    return [[[self alloc] initWithName:name sender:sender userInfo:userInfo cardinality:nil] autorelease];
 }
 
-+ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender;
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo cardinality:(id<LRExpectationCardinality>)cardinality
 {
-    return [[[self alloc] initWithName:name sender:sender cardinality:nil] autorelease];
+    return [[[self alloc] initWithName:name sender:sender userInfo:userInfo cardinality:cardinality] autorelease];
 }
 
-+ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality
+- (id)initWithName:(NSString *)notificationName sender:(id)object userInfo:(NSDictionary *)theUserInfo cardinality:(id<LRExpectationCardinality>)cardinality
 {
-    return [[[self alloc] initWithName:name sender:sender cardinality:cardinality] autorelease];
-}
-
-- (id)initWithName:(NSString *)notificationName sender:(id)object cardinality:(id<LRExpectationCardinality>)cardinality;
-{
-  if (self = [super init]) {
-      numberOfInvocations = 0;
-    name = [notificationName copy];
-    sender = [object retain];
-    if (!cardinality) cardinality = LRM_exactly(1);
-    self.cardinality = cardinality;
-      
-    id notificationObject = sender;
-    
-    if ([sender conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
-      notificationObject = nil;
+    if (self = [super init]) {
+        numberOfInvocations = 0;
+        name = [notificationName copy];
+        sender = [object retain];
+        userInfo = [theUserInfo retain];
+        if (!cardinality) cardinality = LRM_exactly(1);
+        self.cardinality = cardinality;
+        
+        id notificationObject = sender;
+        
+        if ([sender conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
+            notificationObject = nil;
+        }
+        
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(receiveNotification:)
+         name:name
+         object:notificationObject];
     }
-    
-    [[NSNotificationCenter defaultCenter] 
-        addObserver:self 
-           selector:@selector(receiveNotification:) 
-               name:name 
-             object:notificationObject];
-  }
-  return self;
+    return self;
 }
 
 - (void)receiveNotification:(NSNotification *)note
 {
-    BOOL matches;
+    BOOL senderMatches;
   if ([sender conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
-        matches = [sender matches:note.object];
+        senderMatches = [sender matches:note.object];
   }
   else {
-      matches = YES;
+      senderMatches = YES;
   }
     
-    if (matches) {
+    BOOL userInfoMatches;
+    if ([userInfo conformsToProtocol:NSProtocolFromString(@"HCMatcher")]) {
+        userInfoMatches = [userInfo matches:note.userInfo];
+    }else{
+        if (userInfo) {
+            userInfoMatches = [userInfo isEqualToDictionary:note.userInfo];
+        }else{ // userInfo == nil
+            userInfoMatches = (note.userInfo == nil);
+        }
+    }
+    
+    if (senderMatches && userInfoMatches) {
         numberOfInvocations++;
     }
 }
@@ -74,6 +81,7 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [name release];
   [sender release];
+    [userInfo release];
   [super dealloc];
 }
 

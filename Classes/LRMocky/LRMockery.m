@@ -109,19 +109,14 @@
   return addMock([LRMockObject partialMockForObject:object inContext:self]);
 }
 
-- (void)expectNotificationNamed:(NSString *)name;
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender userInfo:(NSDictionary *)userInfo
 {
-  [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name]];
+  [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender userInfo:userInfo]];
 }
 
-- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender;
+- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender userInfo:(NSDictionary *)userInfo cardinality:(id<LRExpectationCardinality>)cardinality
 {
-  [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender]];
-}
-
-- (void)expectNotificationNamed:(NSString *)name fromObject:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality
-{
-    [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender cardinality:cardinality]];
+    [self addExpectation:[LRNotificationExpectation expectationWithNotificationName:name sender:sender userInfo:userInfo cardinality:cardinality]];
 }
 
 - (LRMockyStateMachine *)states:(NSString *)name;

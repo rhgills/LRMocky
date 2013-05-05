@@ -13,11 +13,14 @@
 @interface LRNotificationExpectation : NSObject <LRExpectation> {
   NSString *name;
   id sender;
+    NSDictionary *userInfo;
+    
+    BOOL checkUserInfo;
 }
-+ (id)expectationWithNotificationName:(NSString *)name;
-+ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender;
-+ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender cardinality:(id <LRExpectationCardinality>)cardinality;
-- (id)initWithName:(NSString *)name sender:(id)sender cardinality:(id<LRExpectationCardinality>)cardinality;
+
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo;
++ (id)expectationWithNotificationName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo cardinality:(id <LRExpectationCardinality>)cardinality;
+- (id)initWithName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo cardinality:(id<LRExpectationCardinality>)cardinality;
 
 @property (nonatomic, retain) id<LRExpectationCardinality> cardinality;
 
