@@ -16,6 +16,7 @@
     NSDictionary *userInfo;
     
     BOOL checkUserInfo;
+    NSMutableArray *unexpectedUserInfoDictionaries;
 }
 
 + (id)expectationWithNotificationName:(NSString *)name sender:(id)sender userInfo:(NSDictionary *)userInfo;

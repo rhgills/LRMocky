@@ -32,6 +32,7 @@
         name = [notificationName copy];
         sender = [object retain];
         userInfo = [theUserInfo retain];
+        unexpectedUserInfoDictionaries = [[NSMutableArray alloc] initWithCapacity:0];
         if (!cardinality) cardinality = LRM_exactly(1);
         self.cardinality = cardinality;
         
@@ -73,6 +74,12 @@
     
     if (senderMatches && userInfoMatches) {
         numberOfInvocations++;
+    }else if (senderMatches && !userInfoMatches) {
+        NSDictionary *unexpectedDictionary = note.userInfo;
+        if (!unexpectedDictionary) {
+            unexpectedDictionary = (id)[NSNull null];
+        }
+        [unexpectedUserInfoDictionaries addObject:unexpectedDictionary];
     }
 }
 
@@ -82,6 +89,7 @@
   [name release];
   [sender release];
     [userInfo release];
+    [unexpectedUserInfoDictionaries release];
   [super dealloc];
 }
 
@@ -99,7 +107,20 @@
   if (sender) {
     [message append:[NSString stringWithFormat:@" from %@", sender]];
   }
-  [message append:@", but notification was not posted."];
+    [message append:[NSString stringWithFormat:@" with user info %@", userInfo]];
+
+    if (!unexpectedUserInfoDictionaries.count) {
+      [message append:@", but notification was not posted."];
+    }else{
+        if (unexpectedUserInfoDictionaries.count == 1) {
+        [message append:[NSString stringWithFormat:@", but notification was posted with user info %@.", unexpectedUserInfoDictionaries.lastObject]];
+        }else{ // count > 1
+            [message append:[NSString stringWithFormat:@", but notification was posted %d times with the following user info dictionaries:", unexpectedUserInfoDictionaries.count]];
+            for (NSDictionary *anUnexpectedDictionary in unexpectedUserInfoDictionaries) {
+                [message append:[NSString stringWithFormat:@"\n%@", anUnexpectedDictionary]];
+            }
+        }
+    }
 }
 
 @end
