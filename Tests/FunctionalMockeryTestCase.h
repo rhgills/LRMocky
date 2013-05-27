@@ -19,5 +19,6 @@
   LRMockery *context;
   FakeTestCase *testCase;
   SimpleObject *testObject;
+  SimpleObject *anotherTestObject;
 }
 @end

@@ -58,6 +58,10 @@ NSString *const LRMockyExpectationError = @"LRMockyExpectationError";
 {
   LRInvocationComparitor *comparitor = [LRInvocationComparitor comparitorForInvocation:expectedInvocation];
     
+    if (![self.mockObject isInvocationTarget:[invocation target]]) {
+        return NO;
+    }
+    
   if ([invocation selector] != [expectedInvocation selector]) {
     return NO;
   }

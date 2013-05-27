@@ -23,4 +23,6 @@
 + (id)partialMockForObject:(id)object inContext:(LRMockery *)context;
 - (id)initWithImposterizer:(LRImposterizer *)anImposterizer context:(LRMockery *)mockery;
 - (void)undoSideEffects;
+- (BOOL)isInvocationTarget:(id)aTarget;
+
 @end

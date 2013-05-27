@@ -108,6 +108,19 @@
     @"Expected %@ to receive doSomethingWith:andObject: with(@\"foo\", @\"bar\") exactly(1) times but received it 0 times.", testObject]));
 }
 
+- (void)testCanExpectMethodCallOnMockObjectAndFailWhenObjectIsWrong
+{
+    [context checking:^(LRExpectationBuilder *builder) {
+        [oneOf(testObject) doSomething];
+    }];
+    
+    [anotherTestObject doSomething];
+    assertContextSatisfied(context);
+    
+    assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:@"Expected %@ to receive doSomething exactly(1) times but received it 0 times.", testObject]));
+    assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:@"Unexpected method doSomething called on %@", anotherTestObject]));
+}
+
 - (void)testCanExpectMethodCallWithSpecificNonObjectParametersAndPass;
 {
   [context checking:^(LRExpectationBuilder *builder){

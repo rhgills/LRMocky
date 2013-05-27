@@ -33,8 +33,8 @@
   [testObject doSomething];
   
   assertContextSatisfied(context);
-  
-  assertThat(testCase, failedWithNumberOfFailures(1));
+
+  assertThat(testCase, failedWithNumberOfFailures(2)); // an unexpected invocation in the wrong state, and a failure in the correct one
 }
 
 - (void)testAllowsExpectationsToOccurInCorrectState

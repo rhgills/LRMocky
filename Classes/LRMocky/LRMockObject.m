@@ -77,6 +77,11 @@
   return [super shouldActAsImposterForInvocation:invocation];
 }
 
+- (BOOL)isInvocationTarget:(id)aTarget
+{
+    return (aTarget == self.imposterizer);
+}
+
 - (void)handleImposterizedInvocation:(NSInvocation *)invocation
 {
   [context dispatchInvocation:invocation forMock:self];
@@ -105,7 +110,7 @@
 
 - (void)dispatchInvocation:(NSInvocation *)invocation forMock:(LRMockObject *)mockObject;
 {
-    BOOL expectationWasExpected = NO;
+  BOOL invocationWasExpected = NO;
   for (id<LRExpectation> expectation in expectations) {
     if ([expectation respondsToSelector:@selector(matches:)] && [(LRInvocationExpectation *)expectation matches:invocation]) {
       if ([expectation respondsToSelector:@selector(calledWithInvalidState)] && expectation.calledWithInvalidState == YES) {
@@ -115,11 +120,11 @@
           return;
       }
         [(LRInvocationExpectation *)expectation invoke:invocation];
-        expectationWasExpected = YES;
+        invocationWasExpected = YES;
     }
   }
     
-    if (!expectationWasExpected) {
+    if (!invocationWasExpected) {
       LRUnexpectedInvocation *unexpectedInvocation = [LRUnexpectedInvocation unexpectedInvocation:invocation];
       unexpectedInvocation.mockObject = mockObject;
       [expectations addObject:unexpectedInvocation];
