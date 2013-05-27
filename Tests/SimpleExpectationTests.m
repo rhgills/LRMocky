@@ -121,7 +121,7 @@
   assertThat(testCase, passed());
 }
 
-- (void)testCanExpectMethodCallWitBoolParametersAndPass;
+- (void)testCanExpectMethodCallWithBoolParametersAndPass;
 {
   [context checking:^(LRExpectationBuilder *builder){
     [oneOf(testObject) doSomethingWithBool:YES];
