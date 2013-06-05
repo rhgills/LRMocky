@@ -27,6 +27,7 @@
 
 @interface SimpleObject : NSObject
 {}
+
 + (id)factoryMethod;
 - (void)doSomething;
 - (void)doSomethingElse;
@@ -35,10 +36,12 @@
 - (id)returnSomethingForValue:(NSString *)value;
 - (void)doSomethingWith:(id)object andObject:(id)another;
 - (void)doSomethingWithObject:(id)object;
+- (void)doSomethingWithObjectPointer:(id *)objectPointer;
 - (void)doSomethingWithInt:(NSInteger)anInt;
 - (void)doSomethingWithBool:(BOOL)aBool;
 - (void)doSomethingWithBlock:(void (^)())block;
 - (void)doSomethingWithBlockThatYields:(void (^)(id object))block;
+
 @end
 
 @protocol LRTestCase;

@@ -55,6 +55,11 @@
     return YES;
 }
 
+- (BOOL)matchesObjectPointer:(id *)pointer
+{
+    return YES;
+}
+
 
 - (void) describeTo:(id<HCDescription>)aDescription
 {

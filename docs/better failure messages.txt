@@ -1,0 +1,16 @@
+    
+
+    Failed to invoke expectation: doSomethingWithObject: with arguments: 'expected'. # is clickalbe link to the assertContextSatifisfied line in the failing test
+    Similar unexpected invocations: 
+      doSomethingWithObject: 'actual' # is clickable link to the line of code that called this.
+      doSomethingWithObject: 'this isn't it either'
+
+    Failed to invoke expectation: doSomething
+
+    Unexpected invocations:
+        doSomethingWithObject: 'actual' # is clickable link to the line of code that called this.
+        doSomethingWithObject: 'this isn't it either'
+
+
+
+Alternative to clickable links: 'set breakpoint on LRMockyUnexpectedInvocation' to debug. Pass in, as arguments, the invocation. provide easy ways to, in debugger conditions, specify constraints on the selector, the target and arguments that we want to break on.

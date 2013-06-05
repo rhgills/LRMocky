@@ -1,0 +1,8 @@
+Fix bug where invocation expectations were satisifed by calls to 
+different mock objects based on the same class or protocol. Fix 
+only reporting the first failed expectation to the test case.
+
+An LRInvocationExpectation no longer matches unless the target of 
+the invocation matches the mock object associated with that 
+expectation. 
+

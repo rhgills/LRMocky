@@ -52,4 +52,9 @@
   assertThat(testCase, passed());
 }
 
+//- (void)testConformsToProtocol;
+//- (void)testRespondsToRequiredSelector;
+//- (void)testRespondsToOptionalSelector;
+//- (void)testCanStubRespondsToSelectorToReturnNo;
+
 @end

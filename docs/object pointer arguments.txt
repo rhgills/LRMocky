@@ -1,0 +1,17 @@
+problem:
+
+the method signature of the method is respected. so the expected thing, when passing a hamcrest matcher, is an object pointer. we could check if expected is an object pointer and then dereference it, but what if it is an invalid pointer? it might not be safe to dereference it.
+
+what we want to do is pass a 'magic' pointer that indicates anything. a magic pointer can be a valid pointer to any object that has a lifecycle equal to the application.
+
+this would not be a matcher, although it would be ideal to be able to wrap a matcher:
+
+pointerToObject(equalTo(blah))
+
+pointerToObject needs to return a special pointer, which is known to be safe to dereference. it registers the matcher object with the invocation created with a special object. the invocation isn't created at the time at which this method is called, which is during parameter evaluation. so after an expectation is added by calling an unrecognized selector on a mock object, we need to check for any matcher objects registered on the Widget missing an associated invocation, and set it to the last invocation.
+
+ follow that pointer, asking the object found there for the expected object for an expected invocation. Then, dereference the received pointer, and try to see if its equal.
+
+
+
+ what about error cases? want to indicate that I don't care if its a pointer to object or nil. don't dereference the received pointer to try and see if its equal. pointerToObject(anything()) is different than pointerToAnything(). Pointer to anything must be another magic pointer itself, which is dereferenced when checking. We could add a matchesObjectPointer: method to all matchers. Widget could be an OCHamcrest thing, for mapping a pointer to an HCPointerMatcher, returning nil if that pointer is not associated with an HCPointerMatcher.

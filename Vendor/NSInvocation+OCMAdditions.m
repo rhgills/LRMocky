@@ -113,11 +113,11 @@
 			return [NSNumber numberWithBool:value];
 		}
 		case '^':
-    {
-      void *value = NULL;
-      [self getArgument:&value atIndex:argIndex];
-      return [NSValue valueWithPointer:value];
-    }
+        {
+            void *value = NULL;
+            [self getArgument:&value atIndex:argIndex];
+            return [NSValue valueWithPointer:value];
+        }
 		case '{': // structure
 		{
 			unsigned maxArgSize = [[self methodSignature] frameLength];
@@ -256,7 +256,7 @@
 	long longValue;
 	
 	[self getArgument:&longValue atIndex:anInt];
-	return [NSString stringWithFormat:@"%d", longValue];
+	return [NSString stringWithFormat:@"%ld", longValue];
 }
 
 - (NSString *)unsignedLongDescriptionAtIndex:(int)anInt
@@ -264,7 +264,7 @@
 	unsigned long longValue;
 	
 	[self getArgument:&longValue atIndex:anInt];
-	return [NSString stringWithFormat:@"%u", longValue];
+	return [NSString stringWithFormat:@"%lu", longValue];
 }
 
 - (NSString *)longLongDescriptionAtIndex:(int)anInt
@@ -312,7 +312,7 @@
 	void *buffer;
 	
 	[self getArgument:&buffer atIndex:anInt];
-	return [NSString stringWithFormat:@"%p", buffer];
+	return [NSString stringWithFormat:@"%@", [NSValue valueWithPointer:buffer]];
 }
 
 - (NSString *)cStringDescriptionAtIndex:(int)anInt
@@ -322,7 +322,7 @@
 	memset(buffer, 0x0, 128);
 	
 	[self getArgument:&buffer atIndex:anInt];
-	return [NSString stringWithFormat:@"\"%S\"", buffer];
+	return [NSString stringWithFormat:@"\"%s\"", buffer];
 }
 
 - (NSString *)selectorDescriptionAtIndex:(int)anInt

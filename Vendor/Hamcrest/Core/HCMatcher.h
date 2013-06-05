@@ -28,6 +28,8 @@
 */
 - (BOOL) matches:(id)item;
 
+- (BOOL)matchesObjectPointer:(id *)objectPointer;
+
 /**
     Evaluates the matcher for argument @a item.
 

@@ -13,6 +13,7 @@
 #import "LRMockyStates.h"
 #import "NSInvocation+OCMAdditions.h"
 #import "NSInvocation+LRAdditions.h"
+#import "LRMockObject.h"
 
 NSString *const LRMockyExpectationError = @"LRMockyExpectationError";
 

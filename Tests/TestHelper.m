@@ -77,6 +77,7 @@
 - (id)returnSomethingForValue:(NSString *)value { return nil; }
 - (void)doSomethingWith:(id)object andObject:(id)another {}
 - (void)doSomethingWithObject:(id)object {}
+- (void)doSomethingWithObjectPointer:(id *)objectPointer {}
 - (void)doSomethingWithInt:(NSInteger)anInt {}
 - (void)doSomethingWithBool:(BOOL)aBool {}
 - (void)doSomethingWithBlock:(void (^)())block {}

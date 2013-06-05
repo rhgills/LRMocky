@@ -134,6 +134,39 @@
   assertThat(testCase, passed());
 }
 
+- (void)testCanExpectMethodCallWithSpecificPointerToObjectParameterAndPass
+{
+    __block id error = nil;
+    [context checking:^(LRExpectationBuilder *builder){
+        [oneOf(testObject) doSomethingWithObjectPointer:&error];
+    }];
+    
+    [testObject doSomethingWithObjectPointer:&error];
+    
+    assertContextSatisfied(context);
+    
+    assertThat(testCase, passed());
+}
+
+- (void)testCanExpectMethodCallWithSpecificPointerToObjectParameterAndFail
+{
+    id error = nil; // without __block, this object is captured by the block,
+                    // making &error inside the block and &error outside the block different.
+    __block id *errorAddressInsideBlock = NULL;
+    [context checking:^(LRExpectationBuilder *builder){
+        // const warning because 'error' is captured and not writable.
+        [oneOf(testObject) doSomethingWithObjectPointer:&error];
+        errorAddressInsideBlock = &error;
+    }];
+    
+    [testObject doSomethingWithObjectPointer:&error];
+    
+    assertContextSatisfied(context);
+    
+    assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:@"Expected %@ to receive doSomethingWithObjectPointer: with(%@) exactly(1) times but received it 0 times.", testObject, [NSValue valueWithPointer:errorAddressInsideBlock]]));
+    assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:@"Unexpected method doSomethingWithObjectPointer: called on %@ with arguments: %@", anotherTestObject, @[[NSValue valueWithPointer:&error]]]));
+}
+
 - (void)testCanExpectMethodCallWithBoolParametersAndPass;
 {
   [context checking:^(LRExpectationBuilder *builder){

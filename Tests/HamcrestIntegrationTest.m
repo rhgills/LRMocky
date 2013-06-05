@@ -91,7 +91,23 @@
   assertContextSatisfied(context);
   
   assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:
-    @"Expected %@ to receive doSomethingWithObject: with(sameInstance(<%@>)) exactly(1) times but received it 0 times.", testObject, dummy, other]));
+    @"Expected %@ to receive doSomethingWithObject: with(sameInstance(<%@>)) exactly(1) times but received it 0 times.", testObject, dummy]));
+}
+
+- (void)testCanExpectInvocationWithAnyObjectPointerAndPass
+{
+    __block SimpleObject *dummy = [[SimpleObject alloc] init];
+    
+    [context checking:^(LRExpectationBuilder *builder){
+        [oneOf(testObject) doSomethingWithObjectPointer:anything()]; // can't do this easily with arc anyway - another approach (a matcher of type id *) is needed.
+    }];
+    
+    SimpleObject *other = [[[SimpleObject alloc] init] autorelease];
+    [testObject doSomethingWithObjectPointer:&other];
+    assertContextSatisfied(context);
+    
+    assertThat(testCase, failedWithExpectationError([NSString stringWithFormat:
+                                                     @"Expected %@ to receive doSomethingWithObject: with(sameInstance(<%@>)) exactly(1) times but received it 0 times.", testObject, dummy]));
 }
 
 @end
