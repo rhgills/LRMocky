@@ -6,7 +6,7 @@
 //  Copyright (c) 2010 LJR Software Limited. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
 
 @class LRExpectationMessage;
 
