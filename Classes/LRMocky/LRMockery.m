@@ -150,13 +150,15 @@ NSString *failureFor(id<LRDescribable> expectation) {
 - (void)assertSatisfiedInFile:(NSString *)fileName lineNumber:(int)lineNumber;
 {
     // log first, in case the test case notifier doesn't support logging multiple failures in the same test case.
-    for (id<LRExpectation> expectation in expectations) {
-        if ([expectation isSatisfied] == NO) {
-            NSLog(@"Failure: %@\n"
-                  "In file: %@\n"
-                  "At line: %@", failureFor(expectation), fileName, @(lineNumber));
-        }
-    }
+    // This is useful for GTM, for example. Make this configurable somehow, because its annoying otherwise.
+    
+//    for (id<LRExpectation> expectation in expectations) {
+//        if ([expectation isSatisfied] == NO) {
+//            NSLog(@"Failure: %@\n"
+//                  "In file: %@\n"
+//                  "At line: %@", failureFor(expectation), fileName, @(lineNumber));
+//        }
+//    }
     
     for (id<LRExpectation> expectation in expectations) {
         if ([expectation isSatisfied] == NO) {
