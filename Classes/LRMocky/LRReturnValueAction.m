@@ -9,33 +9,44 @@
 #import "LRReturnValueAction.h"
 
 
-@implementation LRReturnValueAction
+@implementation LRReturnValueAction {
+    id returnObject;
+}
 
 - (id)initWithObject:(id)object;
 {
-  return [self initWithValue:&object];
+    self = [super init];
+    if (!self) return nil;
+    
+    returnObject = [object retain];
+    
+    return self;
 }
 
 - (id)initWithValue:(void *)value;
 {
-  if (self = [super init]) {
-    // use NSData to take a copy of the value to ensure it doesn't change
-    returnValue = [[NSData dataWithBytes:value length:sizeof(value)] retain];
-  }
-  return self;
+    if (self = [super init]) {
+        // use NSData to take a copy of the value to ensure it doesn't change
+        returnValue = [[NSData dataWithBytes:value length:sizeof(value)] retain];
+    }
+    return self;
 }
 
-- (void)dealloc 
+- (void)dealloc
 {
-  [returnValue release];
-  [super dealloc];
+    [returnValue release];
+    [returnObject release];
+    [super dealloc];
 }
 
 - (void)invoke:(NSInvocation *)invocation;
 {
-  [invocation setReturnValue:(void *)[returnValue bytes]];
+    if (returnValue) {
+        [invocation setReturnValue:(void *)[returnValue bytes]];
+    }else{
+        [invocation setReturnValue:(void *)&returnObject];
+    }
 }
-
 @end
 
 LRReturnValueAction *LRA_returnObject(id object) {
